@@ -172,7 +172,7 @@ int main() {
 
         // Render bottom right sprite
         renderLTexture( &gSpriteSheetTexture, SCREEN_WIDTH - gSpriteClips[3].w,
-                        SCREEN_HEIGHT - gSpriteClips[3].h, &gSpriteClips[0],
+                        SCREEN_HEIGHT - gSpriteClips[3].h, &gSpriteClips[3],
                         gRenderer );
 
         // Update screen

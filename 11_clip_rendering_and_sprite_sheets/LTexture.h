@@ -57,26 +57,33 @@ bool loadLTextureFromFile( LTexture* lTexture, char* path,
     printf( "Unable to load image %s! SDL_image Error: %s\n", path,
             IMG_GetError() );
     return false;
-  } else {
-    // Color key image
-    SDL_SetColorKey( loadedSurface, SDL_TRUE,
-                     SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
-
-    // Create texture from surface pixels
-    newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
-    if ( newTexture == NULL ) {
-      printf( "Unable to create texture from %s! SDL Error: %s\n", path,
-              SDL_GetError() );
-      return false;
-    } else {
-      // Get image dimensions
-      lTexture->mWidth = loadedSurface->w;
-      lTexture->mHeight = loadedSurface->h;
-    }
-
-    // Get rid of old loaded surface
-    SDL_FreeSurface( loadedSurface );
   }
+
+  // Color key image
+  if ( SDL_SetColorKey( loadedSurface, SDL_TRUE,
+                        SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) ) !=
+       0 ) {
+    printf( "Unable to load image %s! SDL_image Error: %s\n", path,
+            SDL_GetError() );
+    return false;
+  }
+
+  // Create texture from surface pixels
+  newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
+  if ( newTexture == NULL ) {
+    printf( "Unable to create texture from %s! SDL Error: %s\n", path,
+            SDL_GetError() );
+    return false;
+  }
+
+  // Get image dimensions & texture
+  lTexture->mTexture = newTexture;
+  lTexture->mWidth = loadedSurface->w;
+  lTexture->mHeight = loadedSurface->h;
+
+  // Get rid of old loaded surface
+  SDL_FreeSurface( loadedSurface );
+
   return true;
 }
 
@@ -92,5 +99,8 @@ void renderLTexture( LTexture* lTexture, int x, int y, SDL_Rect* clip,
   }
 
   // Render to screen
-  SDL_RenderCopy( gRenderer, lTexture->mTexture, clip, &renderQuad );
+  if ( SDL_RenderCopy( gRenderer, lTexture->mTexture, clip, &renderQuad ) !=
+       0 ) {
+    printf( "Failed to render texture! SDL Error: %s\n", SDL_GetError() );
+  }
 }
