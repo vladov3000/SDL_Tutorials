@@ -9,7 +9,8 @@ PROGS = \
 	07_texture_loading_and_rendering \
 	11_clip_rendering_and_sprite_sheets \
 	12_color_modulation \
-	my_color_modulation
+	my_color_modulation \
+	14_animated_sprites_and_vsync
 
 #OBJS specifies which files to compile as part of the project
 OBJS = $(join $(PROGS),$(addprefix /,$(PROGS)))
